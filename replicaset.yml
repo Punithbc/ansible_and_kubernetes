@@ -1,0 +1,61 @@
+apiVersion: v1
+kind: Deployment
+metadata:
+  name : myapp
+spec:
+  replicas: 2
+  selector:
+    matchlabels:
+      name : myapp 
+  templates:
+    metadata:
+      labels:
+        name: myapp
+    spec:
+      container:
+       - name: mysprintbootapp
+         image: springboot/punithbc:latest
+      resources:
+        request:
+          cpu: "512m"
+          memory: "128M"
+
+      Ports:
+        - containerPort: 8080    
+
+      livenessProbe:
+        httpget:
+          path: /index
+          port: 8080
+        initialDelaySeconds: 15
+        periodSeconds: 10
+      
+      readinessProbe:
+        httpget:
+          path: /index
+          port: 8080
+        initialDelaySeconds: 15
+        periodSeconds: 10
+      
+-----------
+
+apiVersion: v1
+kind: service
+metadata: 
+  name: myservice
+spec:
+  type: nodePort
+  Ports:
+    - port: 80
+      targetPort:  8080
+  selector:
+    name: myapp   
+
+
+
+
+
+
+
+
+

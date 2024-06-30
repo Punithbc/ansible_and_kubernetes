@@ -1,0 +1,63 @@
+- name: creating a file 
+  hosts: all
+  tasks:
+    - name: creating a new file
+      file :  
+        mode : 0644
+        path : /tmp/test.txt
+        state : touch
+        owner : punith
+
+#ansible-playbook creating_file.yaml ->command to run
+#file is a module
+#state is a operation to be performed
+
+#ansible all -m command -a "ls -lrth /tmp/test.txt"  --> adhoc command to check if
+# file is created or not
+#ansible all -m file -a "path:/tmp/test.txt, state=touch, owner=punith, mode=0644"
+#above is the adhoc command to perform the same operation
+# lst = [
+# {
+#     "name":"first play",
+#     "hosts":"all", 
+#     "tasks":[
+#         {
+#             "name":"create a new file",
+#             "file":
+#                 {
+#                     "path":"/tmp/foo.conf",
+# 		            "mode":664,
+# 		            "owner":"elliot",
+# 		            "state":"touch"
+#                 }
+#          }
+#             ]
+# }
+#     ]
+												
+												
+												
+#print(lst[0]["tasks"][0]["file"])												
+												
+
+
+# ansibe all -i myhost --list-hosts
+# /etc/ansible/host -default host file
+
+# cat myhost
+
+# [dev]
+# node 1
+# node 2
+
+# [test]
+# node 1
+# node 2
+
+# ansible dev -i myhost --list-hosts
+# ansible all -m ping
+# ansible-doc ping
+# ansible node1 -m shell -a "lscpu | head -n 5"
+# There are three modules "raw,shell,command"
+												
+												

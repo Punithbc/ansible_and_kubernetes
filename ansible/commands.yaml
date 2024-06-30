@@ -1,0 +1,3 @@
+ansible-playbook --check creating_file.yaml
+ansible-playbook --list-hosts creating_file.yaml
+ansible-playbook --list-tasks creating_file.yaml

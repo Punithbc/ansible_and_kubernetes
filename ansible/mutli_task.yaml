@@ -1,0 +1,29 @@
+- name: first play
+  hosts: all
+  tasks:
+    - name: install git
+      apt :
+        name: git
+        state: present
+
+    - name: create file
+      file: 
+        path: "tmp.txt"
+        mode: 0664
+        owner: ansible
+        state: touch
+
+- name: second play
+  hosts: node4
+  tasks:
+    - name: create an archive
+      archive:
+        path: /var/SP/log
+        dest: /var/SP/log.zip
+        format: zip        
+# [elliot@control plays]$ ansible-doc package
+# [elliot@control plays]$ ansible-doc archive
+# [elliot@control plays]$ ansible-doc apt
+# [elliot@control plays]$ ansible-doc yum
+
+#above is the command to check the package doc
