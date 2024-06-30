@@ -1,0 +1,60 @@
+- name: create developers group
+  group:
+    name: developers
+- name: create security group
+  group:
+    name: security
+- name: create finance group
+  group:
+    name: finance
+
+
+#Now you can use the import_tasks module to run all the tasks in group-tasks.yml
+# in your first playbook as follows:
+            
+---
+#first-playbook.yml
+
+- name: first play
+  hosts: all
+  tasks:  
+    - name: creating a file
+      file:
+        path: /tmp/temp.txt
+        mode: 0644
+        state: touch
+        owner: ansible
+    - name: importing all groups 
+      import_tasks: group_tasks.yml
+
+
+---
+
+# You can also use the import_playbook module to reuse an entire playbook.
+# reuse-playbook.yaml
+
+- name: second play
+  hosts: all
+  tasks:
+    - name: rebooting a server
+      reboot:
+        msg: server is rebooting
+
+- name: Run first playbook
+  import_playbook: first-playbook.yml   
+
+
+
+#   You can also use the include module to reuse tasks and playbooks. For example,
+# you can replace the import_playbook statement with the include statement as
+# follows:    
+---
+- name: second play
+  hosts: all
+  tasks:
+    - name: rebooting a server
+      reboot:
+        msg: server is rebooting
+
+- name: Run first playbook
+  include: first-playbook.yml 
