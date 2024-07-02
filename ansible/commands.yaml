@@ -1,3 +1,14 @@
+ansible dev -i myhost --list-hosts
+ansible all -m ping
+ansible-doc ping
+ansible node1 -m shell -a "lscpu | head -n 5"
+ansible dbservers -m command -a "tail -3 /etc/passwd"
+#There are three modules "raw,shell,command
+
+---
 ansible-playbook --check creating_file.yaml
+
 ansible-playbook --list-hosts creating_file.yaml
 ansible-playbook --list-tasks creating_file.yaml
+ansible-playbook variable-precedence.yml -e "fav_distro=CentOS"
+ansible node1 -m setup

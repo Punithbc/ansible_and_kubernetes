@@ -1,0 +1,9 @@
+- name: loop playbook
+  hosts: all
+  vars:
+    port: [80,8080,443]
+  tasks:
+    - name: show all ports in the list
+      debug:
+        msg : "{{ item }}"
+      loop: "{{ port }}"

@@ -1,0 +1,10 @@
+- name: playbook
+  hosts: node1
+  tasks:
+    - name: ping operation
+      command: ping -c 1 "{{ item }}"
+      loop: "{{ groups['all'] }}"
+
+
+#This playbook tests if node1 is able to ping all other hosts in your inventory. Go
+#ahead and run the playbook      

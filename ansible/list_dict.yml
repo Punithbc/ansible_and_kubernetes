@@ -14,4 +14,11 @@
 
     - name: print jani occupation
       debug:
-        msg: Janit is a {{ dict.bob.jani }}       
+        msg: Janit is a {{ dict.bob.jani }}  
+
+
+# we can also create vars.yaml file and put all the variable in that file. and import it 
+# using vars_files=vars.yaml 
+
+#You can use the vars_prompt keyword to prompt the user to set a variable’s value
+#at runtime.
