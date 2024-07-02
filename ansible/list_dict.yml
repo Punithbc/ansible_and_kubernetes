@@ -1,0 +1,17 @@
+- name: my-playbook
+  hosts: all
+  var:
+    input1: name
+    lst: [ 1,2,3,4,5,4 ]
+    dict: 
+      bob:
+        puni: engineer
+        jani: CA 
+  tasks:
+    - name: print Puni occupation
+      debug:
+        msg: Punit is an {{ dict.bob.puni }}   
+
+    - name: print jani occupation
+      debug:
+        msg: Janit is a {{ dict.bob.jani }}       
