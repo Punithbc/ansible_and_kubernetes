@@ -1,0 +1,24 @@
+- name: install and start apache play
+  hosts: all
+  tasks:
+    - name: install and start apache play
+      block:
+        - name: install apache
+          yum:
+            name: httpd
+            state: latest
+
+        - name: enable apache
+          service:
+            name: httpd
+            state: started
+            enabled: yes
+      recue:
+        - name: runs when the block is failed
+          debug:
+            msg: "block failed " 
+
+      always:
+        - name: this will run always
+          debug:
+            msg: "whether the block has failed or not, This will run"              

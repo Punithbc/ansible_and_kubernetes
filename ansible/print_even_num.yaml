@@ -1,0 +1,8 @@
+- name: my playbook
+  hosts: node1
+  tasks: 
+    - name: print even numbers
+      debug:
+        msg: "even num is {{ item }}"
+      loop: "{{ range(1,11) | list }}"
+      when: item % 2 == 0
