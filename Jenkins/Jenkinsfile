@@ -1,0 +1,27 @@
+pipeline{
+    agent{
+        docker {
+            image :
+        }
+    }
+    stages{
+        stage(checkout){
+    steps{
+        git branch: 'main' , url=
+    }
+        }
+        
+        stage(code quality analysis){
+            steps{
+                
+            }
+        }
+        stage(build and test){
+            steps{
+                mvn clean install
+            }
+        }
+        stage(push the code to repo)
+    }
+
+}

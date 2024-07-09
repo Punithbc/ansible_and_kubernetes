@@ -16,7 +16,7 @@ terraform import aws_instance=myec2 instance_id
 terraform show
 terraform show-json
 terraform apply -var="image_id=a6q3rkfjfl"
-erraform apply -var='image_id_list=["ami-abc123","ami-def456"]'
+terraform apply -var='image_id_list=["ami-abc123","ami-def456"]'
 terraform apply -var='image_id_map={"us-east-1":"ami-abc123","us-east-2":"ami-def456"}'
 terraform apply -var-file="testing.tfvars"
 export TF_VAR_image_id=ami-abc123
