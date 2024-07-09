@@ -27,5 +27,3 @@ terraform workspace list
 terraform workspace select
 terraform workspace delete
 terraform workspace show
-
-
