@@ -1,0 +1,26 @@
+class Solution:
+    def isValid(self, s: str) -> bool:
+        braces= {
+            "}":"{",   "]":"[",  ")":"("
+        }
+
+        front_list=[]
+
+        for i in s:
+            if i not in braces:
+                front_list.append(i)
+            else:
+                if len(front_list) > 0:
+                    if front_list[-1] == braces[i]:
+                        front_list.pop()
+                    else:
+                        return False
+                else:
+                    return False        
+
+        if front_list == []:
+            return True
+        else:
+            return False                      
+
+       
