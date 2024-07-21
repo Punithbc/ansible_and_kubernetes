@@ -21,7 +21,7 @@ terraform apply -var='image_id_map={"us-east-1":"ami-abc123","us-east-2":"ami-de
 terraform apply -var-file="testing.tfvars"
 export TF_VAR_image_id=ami-abc123
 $terraform plan
-
+terraform destroy -target aws_instance.myec2
 terraform workspace new
 terraform workspace list 
 terraform workspace select
