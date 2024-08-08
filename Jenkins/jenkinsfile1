@@ -1,0 +1,97 @@
+pipeline {
+    agent any
+
+    environment {
+        GIT_REPO = 'https://github.com/your-repo/your-project.git'
+        GIT_BRANCH = 'main'
+        SONARQUBE_SERVER = 'SonarQube'
+        SONARQUBE_PROJECT_KEY = 'your-project-key'
+        SONARQUBE_LOGIN = credentials('sonar-token')
+        FORTIFY_SERVER = 'Fortify'
+        MAVEN_HOME = tool 'Maven'  // Assuming Maven is configured as a tool in Jenkins
+        DOCKER_REGISTRY = 'your-docker-registry'
+        DOCKER_IMAGE = 'your-docker-image'
+        KUBERNETES_CLUSTER = 'your-kubernetes-cluster'
+        TRIVY_IMAGE = 'aquasec/trivy:latest'
+    }
+
+    stages {
+        stage('Checkout') {
+            steps {
+                git branch: "${GIT_BRANCH}", url: "${GIT_REPO}"
+            }
+        }
+
+        stage('Code Quality - SonarQube') {
+            steps {
+                withSonarQubeEnv("${SONARQUBE_SERVER}") {
+                    sh "${MAVEN_HOME}/bin/mvn sonar:sonar -Dsonar.projectKey=${SONARQUBE_PROJECT_KEY} -Dsonar.login=${SONARQUBE_LOGIN}"
+                }
+            }
+        }
+
+        stage('Security Analysis - Fortify') {
+            steps {
+                sh '''
+                fortify-sca -b build_id -scan -f results.fpr
+                fortifyclient uploadFPR -url ${FORTIFY_SERVER} -application your-application-name -version your-version -f results.fpr
+                '''
+            }
+        }
+
+        stage('Build with Maven') {
+            steps {
+                sh "${MAVEN_HOME}/bin/mvn clean install"
+            }
+        }
+
+        stage('Publish to Nexus') {
+            steps {
+                sh "${MAVEN_HOME}/bin/mvn deploy"
+            }
+        }
+
+        stage('Build Docker Image') {
+            steps {
+                script {
+                    sh "docker build -t ${DOCKER_REGISTRY}/${DOCKER_IMAGE}:${GIT_COMMIT} ."
+                }
+            }
+        }
+
+        stage('Trivy Security Scan') {
+            steps {
+                script {
+                    sh "docker run --rm -v /var/run/docker.sock:/var/run/docker.sock -v $(pwd):/root/.cache/ ${TRIVY_IMAGE} image --exit-code 1 --severity HIGH,CRITICAL ${DOCKER_REGISTRY}/${DOCKER_IMAGE}:${GIT_COMMIT}"
+                }
+            }
+        }
+
+        stage('Push Docker Image to Registry') {
+            steps {
+                script {
+                    withDockerRegistry([ credentialsId: 'docker-credentials', url: "${DOCKER_REGISTRY}" ]) {
+                        sh "docker push ${DOCKER_REGISTRY}/${DOCKER_IMAGE}:${GIT_COMMIT}"
+                    }
+                }
+            }
+        }
+
+        stage('Deploy to Kubernetes') {
+            steps {
+                script {
+                    kubeconfig = credentials('kubeconfig')
+                    sh """
+                    kubectl --kubeconfig=${kubeconfig} set image deployment/your-deployment your-container=${DOCKER_REGISTRY}/${DOCKER_IMAGE}:${GIT_COMMIT}
+                    """
+                }
+            }
+        }
+    }
+
+    post {
+        always {
+            cleanWs()
+        }
+    }
+}
