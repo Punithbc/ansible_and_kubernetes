@@ -1,6 +1,0 @@
-print("hello world!")
-print("new feature")
-print("feature 2")
-print("feature 4")
-print("created in feature branch")
-print("feature 5 from main")
